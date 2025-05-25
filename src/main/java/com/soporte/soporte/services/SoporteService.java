@@ -1,6 +1,7 @@
 package com.soporte.soporte.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class SoporteService {
         return SoporteRepository.findAll();
     }
 
-    public Soporte buscarSoporteId(int ticket) {
-        return SoporteRepository.findById(ticket)
+    public Soporte buscarSoporte(int ticket) {
+        return SoporteRepository.findById(ticket).orElse(null);
     }
 
     public Soporte guardarSoporte(Soporte sop) {
@@ -31,4 +32,17 @@ public class SoporteService {
         return "Soporte Eliminado";
     }
 
+    public Soporte actualizarSoporte(Soporte sop){
+        return SoporteRepository.save(sop);
+    }
+
+    public boolean esCritico(int ticket) {
+        Optional<Soporte> optionalSoporte = SoporteRepository.findById(ticket);
+        return optionalSoporte.map(soporte -> {
+        String texto = (soporte.getMensajes() + " " + soporte.getComentarios()).toLowerCase();
+        return texto.contains("urgente") || texto.contains("error") || texto.contains("fallo");
+        }).orElse(false);
+
+
+    }
 }

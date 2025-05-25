@@ -29,4 +29,6 @@ public class Soporte {
 
     @Column(nullable = false)
     public boolean esCritico;
+
+
 }
