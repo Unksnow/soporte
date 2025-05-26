@@ -1,6 +1,5 @@
 package com.soporte.soporte.model;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +28,8 @@ public class Soporte {
 
     @Column(nullable = false)
     public boolean esCritico;
-
+    
+    @Column(nullable = false)
+    private boolean activo = true;
 
 }

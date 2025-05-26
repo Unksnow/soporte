@@ -2,6 +2,7 @@ package com.soporte.soporte.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ public class SoporteService {
     private SoporteRepository SoporteRepository;
 
     public List<Soporte> obtenerSoporte() {
-        return SoporteRepository.findAll();
+        return SoporteRepository.findAll().stream()
+            .filter(Soporte::isActivo)
+            .collect(Collectors.toList());
     }
-
+     
     public Soporte buscarSoporte(int ticket) {
         return SoporteRepository.findById(ticket).orElse(null);
     }
@@ -34,6 +37,13 @@ public class SoporteService {
 
     public Soporte actualizarSoporte(Soporte sop){
         return SoporteRepository.save(sop);
+    }
+
+    public Soporte eliminarLogicamente(int ticket) {
+        Soporte soporte = SoporteRepository.findById(ticket)
+        .orElseThrow(() -> new RuntimeException("Soporte no encontrado con el ticket: " + ticket));
+        soporte.setActivo(false);
+        return SoporteRepository.save(soporte);
     }
 
     public boolean esCritico(int ticket) {

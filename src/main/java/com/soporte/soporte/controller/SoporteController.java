@@ -3,6 +3,7 @@ package com.soporte.soporte.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,17 @@ public class SoporteController {
             sop.setTicket(ticket);
             return ServiceSoporte.actualizarSoporte(sop);
         }
+
+    @PutMapping("/{ticket}/eliminar")
+        public Soporte eliminarLogico(@PathVariable int ticket) {
+            return ServiceSoporte.eliminarLogicamente(ticket);
+        }
+
+    @DeleteMapping("{ticket}")
+        public String eliminarProgreso(@PathVariable int ticket){
+            return ServiceSoporte.eliminarSoporte(ticket); 
+        }     
+
     @GetMapping("/{ticket}/es-critico")
         public boolean esCritico(@PathVariable int ticket) {
             return ServiceSoporte.esCritico(ticket);
