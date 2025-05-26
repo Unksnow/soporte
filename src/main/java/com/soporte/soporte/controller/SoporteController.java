@@ -39,7 +39,7 @@ public class SoporteController {
             return ServiceSoporte.actualizarSoporte(sop);
         }
 
-    @PutMapping("/{ticket}/eliminar")
+    @DeleteMapping("/{ticket}/eliminar")
         public Soporte eliminarLogico(@PathVariable int ticket) {
             return ServiceSoporte.eliminarLogicamente(ticket);
         }
