@@ -7,14 +7,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.soporte.soporte.model.Soporte;
+import com.soporte.soporte.dto.Soporte;
 import com.soporte.soporte.repository.SoporteRepository;
 
 @Service
 public class SoporteService {
 
+    private final SoporteRepository SoporteRepository;
+
     @Autowired
-    private SoporteRepository SoporteRepository;
+    public SoporteService(SoporteRepository SoporteRepository) {
+        this.SoporteRepository = SoporteRepository;
+    }
 
     public List<Soporte> obtenerSoporte() {
         return SoporteRepository.findAll().stream()

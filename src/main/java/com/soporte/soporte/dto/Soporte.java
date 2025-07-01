@@ -1,4 +1,4 @@
-package com.soporte.soporte.model;
+package com.soporte.soporte.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

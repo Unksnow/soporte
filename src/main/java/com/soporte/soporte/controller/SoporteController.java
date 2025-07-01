@@ -3,6 +3,7 @@ package com.soporte.soporte.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soporte.soporte.model.Soporte;
+import com.soporte.soporte.dto.Soporte;
 import com.soporte.soporte.services.SoporteService;
 
 @RestController
@@ -26,32 +27,47 @@ public class SoporteController {
             return ServiceSoporte.obtenerSoporte();
         }
     @PostMapping()
-        public Soporte guardarSoporte(@RequestBody Soporte sop){
-            return ServiceSoporte.guardarSoporte(sop);
-        }
+        public ResponseEntity<String> guardarSoporte(@RequestBody Soporte sop) {
+        Soporte guardado = ServiceSoporte.guardarSoporte(sop);
+        return ResponseEntity.ok("<h3>Soporte guardado exitosamente con ticket #" + guardado.getTicket() + "</h3>");
+    }
     @GetMapping("{ticket}")
-        public Soporte buscarSoporte(@PathVariable int ticket){
-            return ServiceSoporte.buscarSoporte(ticket);
+        public ResponseEntity<?> buscarSoporte(@PathVariable int ticket) {
+        Soporte sop = ServiceSoporte.buscarSoporte(ticket);
+        if (sop == null) {
+            return ResponseEntity.status(404).body("<h3 style='color:red'>Soporte no encontrado con ticket #" + ticket + "</h3>");
         }
+        return ResponseEntity.ok(sop);
+    }
     @PutMapping("{ticket}")
-        public Soporte actualizarSoporte(@PathVariable int ticket, @RequestBody Soporte sop){
-            sop.setTicket(ticket);
-            return ServiceSoporte.actualizarSoporte(sop);
-        }
+        public ResponseEntity<String> actualizarSoporte(@PathVariable int ticket, @RequestBody Soporte sop) {
+        sop.setTicket(ticket);
+        Soporte actualizado = ServiceSoporte.actualizarSoporte(sop);
+        return ResponseEntity.ok("<h3>Soporte actualizado correctamente para el ticket #" + ticket + "</h3>");
+    }
 
     @DeleteMapping("/{ticket}/eliminar")
-        public Soporte eliminarLogico(@PathVariable int ticket) {
-            return ServiceSoporte.eliminarLogicamente(ticket);
+        public ResponseEntity<String> eliminarLogico(@PathVariable int ticket) {
+        Soporte eliminado = ServiceSoporte.eliminarLogicamente(ticket);
+        if (eliminado == null) {
+            return ResponseEntity.status(404).body("<h3 style='color:red'>No se encontró el ticket #" + ticket + " para eliminación lógica</h3>");
         }
+        return ResponseEntity.ok("<h3>Soporte marcado como eliminado (lógicamente) para ticket #" + ticket + "</h3>");
+    }
 
     @DeleteMapping("{ticket}")
-        public String eliminarProgreso(@PathVariable int ticket){
-            return ServiceSoporte.eliminarSoporte(ticket); 
-        }     
+        public ResponseEntity<String> eliminarProgreso(@PathVariable int ticket) {
+        String mensaje = ServiceSoporte.eliminarSoporte(ticket);
+        return ResponseEntity.ok("<h3>" + mensaje + "</h3>");
+    }    
 
     @GetMapping("/{ticket}/es-critico")
-        public boolean esCritico(@PathVariable int ticket) {
-            return ServiceSoporte.esCritico(ticket);
-        }           
+        public ResponseEntity<String> esCritico(@PathVariable int ticket) {
+        boolean critico = ServiceSoporte.esCritico(ticket);
+        String respuesta = critico
+                ? "<h3 style='color:red'>El ticket #" + ticket + " es crítico</h3>"
+                : "<h3>El ticket #" + ticket + " no es crítico</h3>";
+        return ResponseEntity.ok(respuesta);
+    }          
 
 }
